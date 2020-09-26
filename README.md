@@ -1,2 +1,3 @@
-# rrule-duration
-RRule with duration aiming to define recurring events
+# rrule-contrib
+
+[RRule](https://github.com/jakubroztocil/rrule) related utilities.
