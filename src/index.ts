@@ -1,1 +1,1 @@
-console.log('aaaaaaa')
+export const a = 'a'
