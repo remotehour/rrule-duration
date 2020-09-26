@@ -1,11 +1,11 @@
 {
   "name": "rrule-contrib",
   "version": "0.0.1",
-  "main": "dist/index.js",
   "repository": "git@github.com:remotehour/rrule-duration",
   "author": "gosho-kazuya <kay@remotehour.com>",
   "license": "MIT",
   "scripts": {
+    "build": "tsc",
     "test": "ava"
   },
   "devDependencies": {
