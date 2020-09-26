@@ -1,0 +1,35 @@
+{
+  "compilerOptions": {
+    /* Basic Options */
+    "target": "es5",
+    "module": "ES2015",
+    "declaration": true,
+    "sourceMap": true,
+    "removeComments": true,
+    "noLib": false,
+    "skipLibCheck": true,
+    "jsx": "react",
+    "types": ["node"],
+    "lib": ["dom", "es2015", "es2016", "es2017", "esnext.asynciterable"],
+    "keyofStringsOnly": true,
+
+    /* Strict Type-Checking Options */
+    "strict": true,
+
+    /* Additional Checks */
+    "noUnusedLocals": true,
+    "noUnusedParameters": true,
+    "noImplicitReturns": true,
+    "noFallthroughCasesInSwitch": true,
+
+    /* Experimental Options */
+    "experimentalDecorators": true,
+    "emitDecoratorMetadata": true,
+
+    /* Module Resolution Options */
+    "esModuleInterop": true,
+    "baseUrl": "./",
+    "outDir": "dist"
+  },
+  "include": ["./src/**/*"]
+}
