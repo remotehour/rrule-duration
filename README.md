@@ -14,7 +14,13 @@ Or if you use Yarn:
 yarn add rrule rrule-contrib
 ```
 
-# Getting Started
+# Usage
+
+Currently the following classes are exported:
+
+- CalendarEvent
+
+TODO: add more functionality.
 
 ## `CalendarEvent`
 
