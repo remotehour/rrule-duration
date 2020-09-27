@@ -1,6 +1,6 @@
 {
   "name": "rrule-contrib",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "description": "RRule related utilities with timezone NLP support",
   "repository": "git@github.com:remotehour/rrule-duration",
   "author": "gosho-kazuya <kay@remotehour.com>",
