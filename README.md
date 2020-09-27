@@ -55,20 +55,22 @@ const event = new CalendarEvent({
 You can get event occurences with `occurences` method.
 
 ```typescript
-event.toText()
-// => 10:00 AM to 13:30 AM every day on Monday, Friday and every month on the 25th
-
 event.occurences({
   between: [new Date('2020-10-01T00:00:00Z'), new Date('2020-12-31T00:00:00Z')],
 })
-// [
-//   [new Date('2020-10-16T10:00:00Z'), new Date('2020-10-16T13:30:00Z')],
-//   [new Date('2020-11-20T10:00:00Z'), new Date('2020-11-20T13:30:00Z')],
-//   [new Date('2020-12-18T10:00:00Z'), new Date('2020-12-18T13:30:00Z')],
-// ],
 ```
 
-You can get event text as natural language (currently only in English) text.
+It will return the following array:
+
+```typescript
+[
+  [new Date('2020-10-16T10:00:00Z'), new Date('2020-10-16T13:30:00Z')],
+  [new Date('2020-11-20T10:00:00Z'), new Date('2020-11-20T13:30:00Z')],
+  [new Date('2020-12-18T10:00:00Z'), new Date('2020-12-18T13:30:00Z')],
+],
+```
+
+You can also get event text as natural language (currently only in English) text.
 
 ```typescript
 event.toText()
