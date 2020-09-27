@@ -28,10 +28,9 @@ interface ToTextArgs {
 interface OccurencesArgs {
   between?: [Date, Date]
   until?: Date
-  tz?: string
 }
 
-const INITIAL_DATE = new Date(Date.UTC(2000, 0, 1, 0, 0, 0, 0))
+const INITIAL_DATE = new Date(Date.UTC(2000, 0, 15, 0, 0, 0, 0))
 
 export class CalendarEvent {
   private start: dayjs.Dayjs
@@ -59,31 +58,19 @@ export class CalendarEvent {
     this.recurrences = new RRuleSet()
 
     recurrences.forEach((r) => this.recurrences.rrule(r))
-
-    // this.recurrences = recurrences.reduce((ruleset: RRuleSet, recurrence) => {
-    //   ruleset.rrule(
-    //     new RRule({
-    //       ...recurrence.options,
-    //       // byhour: 0,
-    //       // byminute: 0,
-    //       // bysecond: 0,
-    //     }),
-    //   )
-    //   return ruleset
-    // }, new RRuleSet())
   }
 
-  occurences(args: OccurencesArgs) {
+  occurences(args: OccurencesArgs): [Date, Date][] {
     return this.getOccurences(args).map((date) => {
       const start = dayjs
-        .tz(date, args.tz || 'UTC')
+        .utc(date)
         .hour(this.start.hour())
         .minute(this.start.minute())
         .second(0)
         .millisecond(0)
         .toDate()
       const end = dayjs
-        .tz(date, args.tz || 'UTC')
+        .utc(date)
         .hour(this.end.hour())
         .minute(this.end.minute())
         .second(0)
@@ -116,7 +103,8 @@ export class CalendarEvent {
           throw new Error('Invalid class: RRuleSet')
         }
 
-        const crossTimezonePrev = this.start.date() > start.date()
+        const crossTimezonePrev =
+          this.start.date() > start.date() || (this.start.date() === 1 && start.date() > 26)
         if (crossTimezonePrev) {
           return new RRule({
             ...rrule.options,
@@ -125,7 +113,8 @@ export class CalendarEvent {
           }).toText()
         }
 
-        const crossTimezoneNext = this.start.date() < start.date()
+        const crossTimezoneNext =
+          this.start.date() < start.date() || (start.date() === 1 && this.start.date() > 26)
         if (crossTimezoneNext) {
           return new RRule({
             ...rrule.options,

@@ -14,7 +14,7 @@ test('CalendarEvent - init with hour and minute, occurences', (t) => {
     },
     recurrences: [
       new RRule({
-        freq: 1,
+        freq: RRule.MONTHLY,
         dtstart: new Date('2020-09-27T09:08:24.000Z'),
         bymonthday: [],
         byweekday: [RRule.FR.nth(3)],
@@ -73,5 +73,31 @@ test('CalendarEvent - toText format & time zone', (t) => {
   t.is(
     event.toText({ tz: 'Asia/Samarkand' }),
     '11:00 PM to the next day of 2:00 AM every day on Monday, Friday and every month on the 25th',
+  )
+})
+
+test('CalendarEvent - toText format prev date timezone', (t) => {
+  const event = new CalendarEvent({
+    start: {
+      dateTime: '2000-01-01T10:00:00Z',
+    },
+    end: {
+      dateTime: '2000-01-01T13:00:00Z',
+    },
+    recurrences: [
+      new RRule({
+        freq: RRule.DAILY,
+        byweekday: [RRule.MO, RRule.FR],
+      }),
+      new RRule({
+        freq: RRule.MONTHLY,
+        bymonthday: 25,
+      }),
+    ],
+  })
+
+  t.is(
+    event.toText({ tz: 'Pacific/Pago_Pago' }),
+    '11:00 PM to the next day of 2:00 AM every day on Sunday, Thursday and every month on the 24th',
   )
 })
