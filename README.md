@@ -1,5 +1,7 @@
 # rrule-contrib
 
+[![npm version](https://badge.fury.io/js/rrule-contrib.svg)](https://badge.fury.io/js/rrule-contrib)
+
 [RRule](https://github.com/jakubroztocil/rrule) related utilities.
 
 # Install
