@@ -114,7 +114,7 @@ test('CalendarEvent - toText format prev date timezone', (t) => {
   )
 })
 
-test.only('CalendarEvent - summer time', (t) => {
+test('CalendarEvent - summer time', (t) => {
   const event = new CalendarEvent({
     start: {
       hour: 10,
@@ -134,8 +134,8 @@ test.only('CalendarEvent - summer time', (t) => {
   })
 
   // We expect same result even if summer time
-  // MockDate.set(WINTER)
-  // t.is(event.toText({ tz: 'America/Los_Angeles' }), '10:00 AM to 10:30 AM every day')
+  MockDate.set(WINTER)
+  t.is(event.toText({ tz: 'America/Los_Angeles' }), '10:00 AM to 10:30 AM every day')
 
   MockDate.set(SUMMER)
   t.is(event.toText({ tz: 'America/Los_Angeles' }), '10:00 AM to 10:30 AM every day')
