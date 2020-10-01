@@ -6,6 +6,8 @@ import timezone from 'dayjs/plugin/timezone'
 dayjs.extend(utc)
 dayjs.extend(timezone)
 
+dayjs.tz.setDefault('UTC')
+
 interface CalendarEventDef {
   dateTime?: Date | string
   hour?: number
@@ -55,6 +57,8 @@ export class CalendarEvent {
       this.end = this.end.hour(end.hour!).minute(end.minute!)
     }
 
+    console.log(this.start)
+
     this.recurrences = new RRuleSet()
 
     recurrences.forEach((r) => this.recurrences.rrule(r))
@@ -89,12 +93,13 @@ export class CalendarEvent {
       return this.recurrences.between(new Date(), until)
     }
 
-    return this.recurrences.between(new Date(), dayjs().add(1, 'month').toDate())
+    return this.recurrences.between(new Date(), dayjs.utc().add(1, 'month').toDate())
   }
 
   toText({ tz = 'UTC', joinDatesWith = ' and ', timeFormat = 'h:mm A' }: ToTextArgs = {}) {
     const start = dayjs.tz(this.start, tz)
     const end = dayjs.tz(this.end, tz)
+
     const occurencesText = this.recurrences
       .clone()
       .rrules()

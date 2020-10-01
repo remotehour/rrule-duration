@@ -5,11 +5,15 @@ on: push
 jobs:
   test:
     runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        node: [8, 10, 12]
+        tz: ["Z", "UTC", "Asia/Tokyo", "Pacific/Pago_Pago", "America/Los_Angeles"]
     steps:
       - uses: actions/checkout@v2
       - uses: actions/setup-node@v1
         with:
-          node-version: 12.x
+          node-version: ${{ matrix.node }}
       - uses: actions/cache@master
         with:
           path: |
@@ -19,5 +23,5 @@ jobs:
           yarn install
           yarn tsc
           yarn test
-        # env:
-        #   CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
+        env:
+          TZ: ${{ matrix.tz }}

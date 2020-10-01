@@ -1,6 +1,14 @@
 import { CalendarEvent } from './CalendarEvent'
 import { RRule } from 'rrule'
 import test from 'ava'
+import MockDate from 'mockdate'
+
+const SUMMER = '2020-08-01T07:50:00Z'
+const WINTER = '2020-02-01T07:50:00Z'
+
+test.afterEach(() => {
+  MockDate.reset()
+})
 
 test('CalendarEvent - init with hour and minute, occurences', (t) => {
   const event = new CalendarEvent({
@@ -24,10 +32,12 @@ test('CalendarEvent - init with hour and minute, occurences', (t) => {
 
   t.is(event.toText(), '10:00 AM to 10:30 AM every month on the 3rd Friday')
 
+  MockDate.set(SUMMER)
   t.deepEqual(
     event.occurences({
-      between: [new Date('2020-09-01T00:00:00'), new Date('2020-12-31T00:00:00')],
+      between: [new Date('2020-05-01T00:00:00'), new Date('2020-12-31T00:00:00')],
     }),
+    // FIXME: is it broken?
     [
       [new Date('2020-10-16T10:00:00Z'), new Date('2020-10-16T10:30:00Z')],
       [new Date('2020-11-20T10:00:00Z'), new Date('2020-11-20T10:30:00Z')],
@@ -77,6 +87,8 @@ test('CalendarEvent - toText format & time zone', (t) => {
 })
 
 test('CalendarEvent - toText format prev date timezone', (t) => {
+  MockDate.set(SUMMER)
+
   const event = new CalendarEvent({
     start: {
       dateTime: '2000-01-01T10:00:00Z',
@@ -100,4 +112,31 @@ test('CalendarEvent - toText format prev date timezone', (t) => {
     event.toText({ tz: 'Pacific/Pago_Pago' }),
     '11:00 PM to the next day of 2:00 AM every day on Sunday, Thursday and every month on the 24th',
   )
+})
+
+test.only('CalendarEvent - summer time', (t) => {
+  const event = new CalendarEvent({
+    start: {
+      hour: 10,
+      minute: 0,
+      tz: 'America/New_York',
+    },
+    end: {
+      hour: 10,
+      minute: 30,
+      tz: 'America/New_York',
+    },
+    recurrences: [
+      new RRule({
+        freq: RRule.DAILY,
+      }),
+    ],
+  })
+
+  // We expect same result even if summer time
+  MockDate.set(WINTER)
+  t.is(event.toText({ tz: 'America/New_York' }), '10:00 AM to 10:30 AM every day')
+
+  MockDate.set(SUMMER)
+  t.is(event.toText({ tz: 'America/New_York' }), '10:00 AM to 10:30 AM every day')
 })
