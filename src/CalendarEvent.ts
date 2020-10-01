@@ -6,6 +6,8 @@ import timezone from 'dayjs/plugin/timezone'
 dayjs.extend(utc)
 dayjs.extend(timezone)
 
+dayjs.tz.setDefault('UTC')
+
 interface CalendarEventDef {
   dateTime?: Date | string
   hour?: number
@@ -32,27 +34,33 @@ interface OccurencesArgs {
 
 const INITIAL_DATE = new Date(Date.UTC(2000, 0, 15, 0, 0, 0, 0))
 
+function validateCalendarEventDef(e: CalendarEventDef, name: string) {
+  if ((e.hour === undefined || e.minute === undefined) && !e.dateTime) {
+    throw new Error(`invalid ${name} value. Either spcify dateTime or hour/minutes`)
+  }
+}
+
+function hasMinuteHour(e: CalendarEventDef): e is { hour: number; minute: number } {
+  return Number.isInteger(e.hour) && Number.isInteger(e.minute)
+}
+
 export class CalendarEvent {
   private start: dayjs.Dayjs
   private end: dayjs.Dayjs
   private recurrences: RRuleSet
 
   constructor({ start, end, recurrences }: CalendarEventArgs) {
-    if ((start.hour === undefined || start.minute === undefined) && !start.dateTime) {
-      throw new Error('invalid "start" value. Either spcify dateTime or hour/minutes')
-    }
-    if ((end.hour === undefined || end.minute === undefined) && !end.dateTime) {
-      throw new Error('invalid "end" value. Either spcify dateTime or hour/minutes')
-    }
+    validateCalendarEventDef(start, 'start')
+    validateCalendarEventDef(end, 'end')
 
     this.start = dayjs.tz(start.dateTime || INITIAL_DATE, start.tz || 'UTC')
-    if (Number.isInteger(start.hour) && Number.isInteger(start.minute)) {
-      this.start = this.start.hour(start.hour!).minute(start.minute!)
+    if (hasMinuteHour(start)) {
+      this.start = this.start.hour(start.hour).minute(start.minute)
     }
 
     this.end = dayjs.tz(end.dateTime || INITIAL_DATE, end.tz || 'UTC')
-    if (Number.isInteger(end.hour) && Number.isInteger(end.minute)) {
-      this.end = this.end.hour(end.hour!).minute(end.minute!)
+    if (hasMinuteHour(end)) {
+      this.end = this.end.hour(end.hour).minute(end.minute)
     }
 
     this.recurrences = new RRuleSet()
@@ -89,12 +97,13 @@ export class CalendarEvent {
       return this.recurrences.between(new Date(), until)
     }
 
-    return this.recurrences.between(new Date(), dayjs().add(1, 'month').toDate())
+    return this.recurrences.between(new Date(), dayjs.utc().add(1, 'month').toDate())
   }
 
   toText({ tz = 'UTC', joinDatesWith = ' and ', timeFormat = 'h:mm A' }: ToTextArgs = {}) {
-    const start = dayjs.tz(this.start, tz)
-    const end = dayjs.tz(this.end, tz)
+    const start = this.start.tz(tz)
+    const end = this.end.tz(tz)
+
     const occurencesText = this.recurrences
       .clone()
       .rrules()
