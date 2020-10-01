@@ -7,13 +7,13 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        node: [8, 10, 12]
+        node-version: [10, 12]
         tz: ["Z", "UTC", "Asia/Tokyo", "Pacific/Pago_Pago", "America/Los_Angeles"]
     steps:
       - uses: actions/checkout@v2
       - uses: actions/setup-node@v1
         with:
-          node-version: ${{ matrix.node }}
+          node-version: ${{ matrix.node-version }}
       - uses: actions/cache@master
         with:
           path: |
