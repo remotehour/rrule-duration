@@ -46,6 +46,44 @@ test('CalendarEvent - init with hour and minute, occurences', (t) => {
   )
 })
 
+test('CalendarEvent - different time zone between start and end', (t) => {
+  const event = new CalendarEvent({
+    start: {
+      hour: 10,
+      minute: 0,
+      tz: 'UTC',
+    },
+    end: {
+      hour: 19,
+      minute: 30,
+      tz: 'Asia/Tokyo',
+    },
+    recurrences: [
+      new RRule({
+        freq: RRule.MONTHLY,
+        dtstart: new Date('2020-09-27T09:08:24.000Z'),
+        bymonthday: [],
+        byweekday: [RRule.FR.nth(3)],
+      }),
+    ],
+  })
+
+  t.is(event.toText(), '10:00 AM to 10:30 AM every month on the 3rd Friday')
+
+  MockDate.set(SUMMER)
+  t.deepEqual(
+    event.occurences({
+      between: [new Date('2020-05-01T00:00:00'), new Date('2020-12-31T00:00:00')],
+    }),
+    // FIXME: is it broken?
+    [
+      [new Date('2020-10-16T10:00:00Z'), new Date('2020-10-16T10:30:00Z')],
+      [new Date('2020-11-20T10:00:00Z'), new Date('2020-11-20T10:30:00Z')],
+      [new Date('2020-12-18T10:00:00Z'), new Date('2020-12-18T10:30:00Z')],
+    ],
+  )
+})
+
 test('CalendarEvent - toText format & time zone', (t) => {
   const event = new CalendarEvent({
     start: {

@@ -1,45 +1,45 @@
-# rrule-contrib
+# rrule-duration
 
-[![npm version](https://badge.fury.io/js/rrule-contrib.svg)](https://badge.fury.io/js/rrule-contrib)
+[![npm version](https://badge.fury.io/js/rrule-duration.svg)](https://badge.fury.io/js/rrule-duration)
 
-[RRule](https://github.com/jakubroztocil/rrule) related utilities.
+Add duration feature and time zone support to [RRule](https://github.com/jakubroztocil/rrule).
+
+# Features
+
+- Create events with duration and represent it with RRule
+- Time zone support, even separate start/end time
+- Dump duration as natural language
 
 # Install
 
 ```
-npm install --save rrule rrule-contrib
+npm install --save rrule rrule-duration
 ```
 
 Or if you use Yarn:
 
 ```
-yarn add rrule rrule-contrib
+yarn add rrule rrule-duration
 ```
 
-# Usage
-
-Currently the following classes are exported:
-
-- CalendarEvent
-
-TODO: add more functionality.
-
-## `CalendarEvent`
+# Basic Usage
 
 `CalendarEvent` class is intended to use `RRule` with calendar events. Basically an `event` is represented by `start`, `end` and `RRule`. Let's see an example event.
 
 ```typescript
 import { RRule } from 'rrule'
-import { CalendarEvent } from 'rrule-contrib'
+import { CalendarEvent } from 'rrule-duration'
 
 const event = new CalendarEvent({
   start: {
     hour: 10,
     minute: 0,
+    tz: 'UTC',
   },
   end: {
-    hour: 13,
+    hour: 22,
     minute: 30,
+    tz: 'Asia/Tokyo',
   },
   recurrences: [
     new RRule({
@@ -72,6 +72,10 @@ It will return the following array:
 ],
 ```
 
+Note it includes start and end in plain `Date` type.
+
+# Natural Language
+
 You can also get event text as natural language (currently only in English) text.
 
 ```typescript
@@ -79,7 +83,7 @@ event.toText()
 // => 10:00 AM to 13:30 AM every day on Monday, Friday and every month on the 25th
 ```
 
-**Time zone support**
+# Time Zone Support
 
 The most powerful feature of `CalendarEvent` is strong time zone support. We, Remotehour, provides our service globally so this feature has been developed. In the above example, you can pass a `tz` option to `toText` method.
 
