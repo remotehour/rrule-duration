@@ -40,8 +40,25 @@ function validateCalendarEventDef(e: CalendarEventDef, name: string) {
   }
 }
 
-function hasMinuteHour(e: CalendarEventDef): e is { hour: number; minute: number } {
+function hasMinuteHour(e: CalendarEventDef): e is { hour: number; minute: number; tz?: string } {
   return Number.isInteger(e.hour) && Number.isInteger(e.minute)
+}
+
+// TODO: Better implementation?
+function getOffsetFromTimeZone(d: dayjs.Dayjs) {
+  try {
+    const diffString = d.format('Z')
+    if (!diffString.includes('+')) {
+      return 0
+    }
+    const [hour, minute] = diffString
+      .replace('+', '')
+      .split(':')
+      .map((x) => parseInt(x))
+    return -1 * (hour * 60 + minute)
+  } catch {
+    return 0
+  }
 }
 
 export class CalendarEvent {
@@ -74,6 +91,7 @@ export class CalendarEvent {
         .utc(date)
         .hour(this.start.hour())
         .minute(this.start.minute())
+        .add(getOffsetFromTimeZone(this.start), 'minute')
         .second(0)
         .millisecond(0)
         .toDate()
@@ -81,6 +99,7 @@ export class CalendarEvent {
         .utc(date)
         .hour(this.end.hour())
         .minute(this.end.minute())
+        .add(getOffsetFromTimeZone(this.end), 'minute')
         .second(0)
         .millisecond(0)
         .toDate()
