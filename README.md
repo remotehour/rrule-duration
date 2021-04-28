@@ -1,9 +1,8 @@
 [![test](https://github.com/remotehour/rrule-duration/actions/workflows/test.yml/badge.svg)](https://github.com/remotehour/rrule-duration/actions/workflows/test.yml)
 [![release](https://github.com/remotehour/rrule-duration/actions/workflows/release.yml/badge.svg)](https://github.com/remotehour/rrule-duration/actions/workflows/release.yml)
+[![npm version](https://badge.fury.io/js/rrule-duration.svg)](https://badge.fury.io/js/rrule-duration)
 
 # rrule-duration
-
-[![npm version](https://badge.fury.io/js/rrule-duration.svg)](https://badge.fury.io/js/rrule-duration)
 
 Add duration feature and time zone support to [RRule](https://github.com/jakubroztocil/rrule).
 
