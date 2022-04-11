@@ -16,7 +16,7 @@
     "test": "ava"
   },
   "devDependencies": {
-    "ava": "^3.12.1",
+    "ava": "^4.2.0",
     "husky": "^4.3.0",
     "lint-staged": "^10.4.0",
     "mockdate": "^3.0.2",
